@@ -1,7 +1,9 @@
 import View from './view';
+import icons from '../../img/icons.svg';
 
 class ResultsView extends View {
   _parentElement = document.querySelector('.results');
+  _errorMessage = 'No recipes found for your query! Please Try Again :(';
 
   _generateMarkup() {
     console.log(this._data);
@@ -9,7 +11,7 @@ class ResultsView extends View {
       .map(function (rec) {
         return `
         <li class="preview">
-            <a class="preview__link preview__link--active" href="#${rec.id}">
+            <a class="preview__link" href="#${rec.id}">
             <figure class="preview__fig">
                 <img src="${rec.imageUrl}" alt="Test" />
             </figure>
@@ -18,7 +20,7 @@ class ResultsView extends View {
                 <p class="preview__publisher">${rec.publisher}</p>
                 <div class="preview__user-generated">
                 <svg>
-                    <use href="src/img/icons.svg#icon-user"></use>
+                    <use href="${icons}#icon-user"></use>
                 </svg>
                 </div>
             </div>
