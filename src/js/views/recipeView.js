@@ -37,7 +37,7 @@ class RecipeView extends View {
             <span class="recipe__info-text">servings</span>
 
             <div class="recipe__info-buttons">
-              <button class="btn--tiny btn--increase-servings">
+              <button class="btn--tiny btn--decrease-servings">
                 <svg>
                   <use href="${icons}#icon-minus-circle"></use>
                 </svg>
@@ -65,7 +65,8 @@ class RecipeView extends View {
         <div class="recipe__ingredients">
           <h2 class="heading--2">Recipe ingredients</h2>
           <ul class="recipe__ingredient-list">
-          ${recipe.ingredients.map(this._generateIngredientMarkup).join('')}
+          
+          ${this._generateAllIngredientsMarkup(recipe.ingredients)}
             
           </ul>
         </div>
@@ -94,6 +95,25 @@ class RecipeView extends View {
     return markup;
   }
 
+  renderIngredients(ingredients, servings) {
+    const ingredients_list = this._parentElement.querySelector(
+      '.recipe__ingredient-list'
+    );
+    ingredients_list.innerHTML = '';
+    const markup = this._generateAllIngredientsMarkup(ingredients);
+    ingredients_list.innerHTML = markup;
+    this._renderServings(servings);
+  }
+
+  _renderServings(servings) {
+    this._parentElement.querySelector('.recipe__info-data--people').innerHTML =
+      servings;
+  }
+
+  _generateAllIngredientsMarkup(ingredients) {
+    return ingredients.map(this._generateIngredientMarkup).join('');
+  }
+
   _generateIngredientMarkup(ing) {
     return `
       <li class="recipe__ingredient">
@@ -113,6 +133,15 @@ class RecipeView extends View {
 
   addHandlerRender(handler) {
     ['load', 'hashchange'].forEach(el => window.addEventListener(el, handler));
+  }
+
+  addHandlerServings(handler) {
+    this._parentElement.querySelectorAll('.btn--tiny').forEach(el => {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        handler(el);
+      });
+    });
   }
 }
 

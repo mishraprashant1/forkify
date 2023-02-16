@@ -26,7 +26,11 @@ const showRecipe = async function () {
 
     // 3. Render Recipe
     recipeView.render(model.state.recipe);
+
+    // 4. Add Servings Handler
+    recipeView.addHandlerServings(controlServings);
   } catch (err) {
+    console.error(err);
     recipeView.renderError();
   }
 };
@@ -50,6 +54,19 @@ const controlPagination = async function (e) {
   resultsView.render(model.getSearchResultsPage(Number(toPage)));
   paginationView.render(model.state.search);
   paginationView.addHandlerPage(controlPagination);
+};
+
+const controlServings = function (e) {
+  if (e.classList.contains('btn--increase-servings')) {
+    model.changeServings(model.state.recipe.servings + 1);
+  } else {
+    model.changeServings(model.state.recipe.servings - 1);
+  }
+
+  recipeView.renderIngredients(
+    model.state.recipe.ingredients,
+    model.state.recipe.servings
+  );
 };
 
 function init() {
