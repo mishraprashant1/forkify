@@ -21,6 +21,9 @@ const showRecipe = async function () {
     // 1. Render Spinner
     recipeView.renderSpinner();
 
+    // 1.5 Update the search results and select the active recipe
+    resultsView.update(model.getSearchResultsPage());
+
     // 2. Fetch recipe
     await model.loadRecipe(id);
 
@@ -28,7 +31,7 @@ const showRecipe = async function () {
     recipeView.render(model.state.recipe);
 
     // 4. Add Servings Handler
-    recipeView.addHandlerServings(controlServings);
+    // recipeView.addHandlerServings(controlServings);
   } catch (err) {
     console.error(err);
     recipeView.renderError();
@@ -56,21 +59,18 @@ const controlPagination = async function (e) {
   paginationView.addHandlerPage(controlPagination);
 };
 
-const controlServings = function (e) {
-  if (e.classList.contains('btn--increase-servings')) {
-    model.changeServings(model.state.recipe.servings + 1);
-  } else {
-    model.changeServings(model.state.recipe.servings - 1);
-  }
+const controlServings = function (newServings) {
+  // Update Servings
+  model.changeServings(newServings);
 
-  recipeView.renderIngredients(
-    model.state.recipe.ingredients,
-    model.state.recipe.servings
-  );
+  // Update View
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 };
 
 function init() {
   recipeView.addHandlerRender(showRecipe);
   searchView.addHandlerSearch(controlSearchResults);
+  recipeView.addHandlerUpdateServings(controlServings);
 }
 init();
